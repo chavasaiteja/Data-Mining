@@ -62,9 +62,7 @@ object Task2 {
 
     if(algorithm=="K") {
       val clusters = KMeans.train(tfidfIgnore, numClusters, numIterations, initializationMode = "k-means||", 42)
-
       val predictions = clusters.predict(tfidfIgnore).zipWithIndex()
-
       println()
       for(x <- predictions){
         print(x+",")
@@ -96,11 +94,7 @@ object Task2 {
         val words = cluster_to_word._2.map(word => (word, 1)).groupBy(_._1)
         val reduce = words.map(word => (word._1, word._2.size)).toList.sortWith((_._2 > _._2))
         cluster_to_words_count(cluster_to_word._1) = reduce
-        //println(reduce)
       }
-
-      //println(cluster_to_words_count)
-
 
       val cluster_map = new HashMap[Int, Int]()
 
@@ -333,8 +327,7 @@ object Task2 {
 
       val file = new File("SaiTeja_Chava_KMeans_small_B_8_20.json")
       val bw = new BufferedWriter(new FileWriter(file))
-      //var cluster_size = 0
-      //var cluster_error = 0.0
+
       bw.write("{ \n")
       bw.write("\t \"algorithm\": \"Bisecting K-Means\", \n")
       bw.write("\t \"WSSE\":" + model.computeCost(tfidfIgnore) + ", \n")

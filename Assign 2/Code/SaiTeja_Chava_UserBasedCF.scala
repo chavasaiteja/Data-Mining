@@ -52,11 +52,6 @@ object SaiTeja_Chava_UserBasedCF {
         reverse_item_map.put(index2,lkj)
         index2=index2+1
       }
-
-      //item_map.put(BigInt(line.split(',')(0).getBytes()).toInt,line.split(",")(0))
-      //println(user_map.get(BigInt(line.split(",")(0).getBytes()).toInt))
-      //println(line.split(',')(0))
-      //user_map += ()
     }
     trainRDD.collect().foreach{ line =>
       var tyu = line.split(",")(0)
@@ -72,75 +67,24 @@ object SaiTeja_Chava_UserBasedCF {
         reverse_item_map.put(index2,ghj)
         index2=index2+1
       }
-
-      //item_map.put(BigInt(line.split(',')(0).getBytes()).toInt,line.split(",")(0))
-      //println(user_map.get(BigInt(line.split(",")(0).getBytes()).toInt))
-      //println(line.split(',')(0))
-      //user_map += ()
     }
-    //println()
-    //println("The attributes of the training set are :")
-    //println(train_header)
 
     val trainRDD1 = trainRDD.filter{x => x!=train_header}.map(line => line.split(",")).map{x => (x(0),x(1),x(2))}
     val testRDD1  = testRDD.filter{x => x!=test_header}.map(line => line.split(",")).map{x => (x(0),x(1),1)}
     val sai = testRDD.filter{x => x!=test_header}.map(line => line.split(",")).map{x => ((user_map(x(0)),item_map(x(1))),x(2).toDouble)}
 
-    //val user_map = new HashMap[Int,String]()
-
-    /*
-    //val hashMap1: HashMap[String, String] = HashMap(("PD","Plain Donut"),("SD","Strawberry Donut"),("CD","Chocolate Donut"))
-
-    //var user_map = Map[Int,String]()
-    //var item_map = Map[Int,String]()
-    //var A:Map[Int,String] = Map()
-    //A + = ()
-
-    for(line<-testRDD1
-    {
-      val ke = line(0)
-      print(ke)
-    }
-
-    testRDD.collect().foreach{ line =>
-      user_map.put(BigInt(line.split(',')(0).getBytes()).toInt],line.split(",")(0))
-      //println(line.split(',')(0))
-    }
-    //println(count)
-    */
-    val test_rdd = testRDD1.map(r => ((user_map(r._1), item_map(r._2)),r._3.toDouble))
-
-
-    //val user_ids     = trainRDD1.map(_._1).distinct.sortBy(x => x).zipWithIndex.collectAsMap
-    //val business_ids = trainRDD1.map(_._2).distinct.sortBy(x => x).zipWithIndex.collectAsMap
+    val test_rdd = testRDD1.map(r => ((user_map(r._1), item_map(r._2)),r._3.toDouble)
 
     val train_rdd = trainRDD1.map(r => ((user_map(r._1), item_map(r._2)), r._3.toDouble))
     val train_part = train_rdd.filter(elem => elem._1._1<14000)
-    //println("train part count is : "+train_part.count())
 
     val train12  = train_rdd.map{case((user,business),stars) => (business, (user,stars))}
-    //println("The train data is as follows \n")
-    //train1.take(5).foreach(println)
-
-    //println("train1 count is : "+train1.count())
-
-    //val user_ids1     = testRDD1.map(_._1).distinct.sortBy(x => x).zipWithIndex.collectAsMap
-    //val business_ids1 = testRDD1.map(_._2).distinct.sortBy(x => x).zipWithIndex.collectAsMap
-
-
     val train_part2 = sai.filter(elem => elem._1._1>5800)
-    //println("Test part count is : "+train_part2.count())
 
     var train13 = train_part.union(train_part2)
     var train1 = train13.map{case((user,business),stars) => (business, (user,stars))}
 
     val testdata = test_rdd.map{case((user, business), num) => (business,(user))}
-    //val test_rdd  = test_rdd1.map{ case (user_id, business_id) => ((user_id, business_id),1)}
-    //println("The test data is as follows \n")
-    //test_rdd.take(5).foreach(println)
-    //println("test_rdd count is : "+test_rdd.count())
-
-    //println("Distinct users are : "+ trainRDD1.map(r => BigInt(r._1.getBytes()).toInt).distinct().count())
 
     val user_stars   =  train_rdd.map{case((user, business),stars) => (user, stars)}
     val user_grouped =  user_stars.groupByKey()
@@ -148,50 +92,11 @@ object SaiTeja_Chava_UserBasedCF {
     val user_sum     =  user_stars.reduceByKey(_ + _)
     val user_sum_join_length    =  user_sum.join(user_length)
     val user_avg                =  user_sum_join_length.map{case(user, (sum, len)) => (user, sum / len)}
-
-
-    //print("After user_avg\n")
-    //print(user_avg.count()+"\n")
-
-    //val train1_join_train1 = train1.join(train1)
-    //val train_res = train.map{case((user,product),rate_text) => (product, (user,rate_text))}
     val train1_join_train1 = train1.join(train1)
 
-    //println("Train1_join_train1 is : "+train1_join_train1.count())
-
     val grid1 = train1_join_train1.map{case(business,((useri, ratei),(userj, ratej))) => ((useri, userj),business,(ratei, ratej))}
-    //val grid2 = grid1.map{case((useri, userj),business,(ratei, ratej)) => ((useri,userj,business),(ratei,ratej))}
     val grid = grid1.filter(elem => elem._1._1<elem._1._2).cache()
-    //println("Grid3 count is :"+grid3.count())
-    //val grid4 = grid3.filter(elem => elem._1._1 > elem._1._2)
-    //println("grid4 count is : "+grid4.count())
-    //println("Grid 3 count is : "+grid3.count())
-    /*
-    var s : Set[(Int,Int)] = Set()
-    val grid5 = grid3.map{case((useri, userj),business,(ratei, ratej)) => ((useri, userj),business,(ratei, ratej))}
-    //println("Grid 5 count is : "+grid5.count())
-    val iter5 = grid5.map(elem => (elem._1._1 + "," + elem._1._2)).toLocalIterator
-    while(iter5.hasNext) {
-      val qwe = iter5.next()
-      println()
-      println(qwe)
-      println()
-      //val ewq = (qwe.get(1),)
-      //if (!s.contains(() || !s.contains((userj,useri)))
-
-    }
-    println("Set count is : "+s.size)
-    val grid4 = grid3.filter(elem=>s.contains((elem._1._1,elem._1._2)))
-
-    //val asd =   grid3.collect().toMap
-    //val grid4 = grid3.filter(elem => !asd.keySet.contains(elem._1._2,elem._1._1,elem._1._3))
-    val grid = grid4
-
-    println("Grid is : "+grid.count())
-
-
-    val grid = grid4
-    */
+    
     val i = grid.map{case((useri, userj),business,(ratei, ratej)) => ((useri, userj),ratei)}
     val j = grid.map{case((useri, userj),business,(ratei, ratej)) => ((useri, userj),ratej)}
 
@@ -202,22 +107,15 @@ object SaiTeja_Chava_UserBasedCF {
     val matrix_group1 = grid.map{case((useri, userj),business,(ratei, ratej)) => ((useri, userj), (ratei, ratej))}
     val matrix_group = matrix_group1.groupByKey()
 
-    //print("After matrix_group\n")
-    //print("The matrix group count is :" + matrix_group.count()+"\n")
-
     val avg_group1 = ii.join(jj)
     val length = matrix_group.map(x => (x._1, x._2.size))
     val avg_group2 = avg_group1.join(length)
     val avg_group  = avg_group2.map{case((useri, userj),((ratei,ratej),len)) => ((useri, userj),(ratei / len, ratej/len))}
 
-    //val map_group = grid.filter(elem => elem._1._1 != elem._1._2)
     val map_group1 = grid.map{case((useri, userj),product,(ratei, ratej)) => ((useri, userj),(ratei, ratej))}
 
     val mean = map_group1.join(avg_group)
     val mean1 = mean.map{case((useri, userj),((ratei, ratej),(meani, meanj))) => ((useri, userj),((ratei - meani),(ratej - meanj)))}
-
-    //print("After mean1\n")
-    //print(mean1.count()+"\n")
 
     val abc = mean1.map{case((useri, userj),(meani,meanj)) => ((useri, userj),(meani * meanj))}
     val numerator = abc.reduceByKey(_ + _)
@@ -241,9 +139,6 @@ object SaiTeja_Chava_UserBasedCF {
       else ((useri, userj), (num / denom))
     }.cache()
 
-    //print("After w1\n")
-    //print(w1.count())
-
     val item_stars = train_rdd.map { case ((user, item), stars) => (item, stars) }
     val item_grouped = item_stars.groupByKey()
     val item_length = item_grouped.map(x => (x._1, x._2.size))
@@ -252,7 +147,6 @@ object SaiTeja_Chava_UserBasedCF {
     val item_avg = item_sum_join_length.map { case (item, (sum, len)) => (item, (sum / len)) }
 
     val testtrain = testdata.join(train1)
-    //println("Count of testtrain is :"+testtrain.count())
     val testtrain1 = testtrain.map{case(business, (useri,(userj, rj))) => ((useri, userj),(business, rj))}
 
     val testmean = testtrain1.join(avg_group)
@@ -271,34 +165,22 @@ object SaiTeja_Chava_UserBasedCF {
       else (user, (product, n / d))
     }
 
-    //print("After predictright\n")
-
     val predict = user_avg.join(predicright).map{case(user,((left), (business, right))) => ((user, business), left + right)}
-    //println("Predict count is :"+predict.count())
-
-    //print("After predict\n")
-
     val maprightpart = predict.collect().toMap
 
-    //print("After mapright\n")
-
     val remaining = test_rdd.filter(elem => !maprightpart.keySet.contains(elem._1))
-    //println("Count of remaining is :"+remaining.count())
-    //print("After rest\n")
 
     val rating_for_remaining = remaining.map{case((user, business), num) => (user, (business))}.join(user_avg).map{case(user,(business, avg)) => ((user,business), avg)}
 
     val maprightpart1 = rating_for_remaining.collectAsMap()
 
     val remaining_remaining = remaining.filter(elem => !maprightpart1.keySet.contains(elem._1))
-    //println("Count of remaining_reamining is :"+remaining_remaining.count())
 
     val rating_for_remaining_reamining = remaining_remaining.map{case((user, business), num) => (business,(user))}.join(item_avg).map{case(business,(user, avg)) => ((user,business),avg)}
 
     val maprightpart2 = rating_for_remaining_reamining.collectAsMap()
 
     val remaining_remaining_remaining = remaining_remaining.filter(elem => !maprightpart2.keySet.contains(elem._1))
-    //println("Count of remaining_reamining_remaining is :"+remaining_remaining_remaining.count())
 
     val rating_for_reamining_remaining_remaining = remaining_remaining_remaining.map{case((user, business), num) => ((user,business),3.0)}
 
@@ -309,8 +191,6 @@ object SaiTeja_Chava_UserBasedCF {
       else if (pred >= 5) ((user, business), 5.0)
       else ((user, business), pred)
     }
-
-    //print("After preductNomal\n")
 
     val xyz  = sai.join(preductNomal)
 

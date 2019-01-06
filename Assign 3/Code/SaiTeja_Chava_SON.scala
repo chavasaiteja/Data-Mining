@@ -35,8 +35,6 @@ object SaiTeja_Chava_SON {
     var flag = 0
 
     while(freq_items.size > tuple_size - 1){
-      //println(tuple_size)
-      //var candidate = candidate1
       for(x <- candidate){
         breakable{
           var count = 0
@@ -61,29 +59,19 @@ object SaiTeja_Chava_SON {
 
 
       if(candidate_set.size > candidate_set_size){
-        //print("Hi")
         freq_items = result
         result = Set.empty[String]
         candidate_set_size = candidate_set.size
         tuple_size = tuple_size + 1
       }
       else{
-        //print("No Hi")
         tuple_size = 1 + freq_items.size
       }
       candidate = freq_items.subsets(tuple_size)
     }
     candidate_set.iterator
   }
-  /*
-  def runApriori(iter: Iterator[List[Int]], minSupport: Int): Iterator[(Int, List[Set[Int]])] = {
-    var singleMap = HashMap.empty[Int, Int]
-    var baskets = ListBuffer.empty[List[Int]]
-    var freqSetsListBuffer = ListBuffer.empty[Set[Int]]
-    var freqSetsList = List.empty[Set[Int]]
-    var results = HashMap.empty[Int, List[Set[Int]]]
-  }
-  */
+  
   def sort[A : Ordering](coll: Seq[Iterable[A]]) = coll.sorted
 
   def main(args: Array[String]) {
@@ -94,29 +82,17 @@ object SaiTeja_Chava_SON {
     //val outfile = new PrintWriter(new File("SaiTeja_Chava_SON_yelp_reviews_test_30.txt"))
     val outfile = new PrintWriter(new File(args(2)))
     val start_time = System.currentTimeMillis()
-    val conf = new SparkConf().setAppName("Sai").setMaster("local[*]")//.set("spark.shuffle.spill", "false").set("spark.rdd.compress", "true").set("spark.storage.memoryFraction", "1")
-    //.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    val conf = new SparkConf().setAppName("Sai").setMaster("local[*]")
     val sc = new SparkContext(conf)
 
 
     val input = sc.textFile(args(0))
     val support = args(1).toInt //.toDouble
-    //val support = 30
     var tdp = ""
-    //val input = sc.textFile("/Users/sai/Documents/Data Mining INF 553/Assignments/hw3/Data/yelp_reviews_test.txt")
-    //input.take(5).foreach(println)
-    //println()
 
     val baskets = input.map(line => (line.split(",")(0),line.split(",")(1))).groupByKey().map(_._2.toSet)//sortByKey()
-    //baskets.take(5).foreach(println)
-    //var baskets = input.map(elem => )
-
     val no_of_baskets = baskets.count()
-    //println("No of baskets are :"+input1.count())
-
     var no_of_partitions = input.getNumPartitions
-    //println()
-    //println("No of partitions are : "+no_of_partitions)
 
     var thresold = 0
     var sus = support/no_of_partitions
@@ -126,9 +102,6 @@ object SaiTeja_Chava_SON {
     else{
       thresold = 1
     }
-    //println("Thresold is :"+thresold)
-    //input1.
-    //var first_map = input1.mapPartitions(partition => {apriori(partition,thresold)})
     var first = baskets.mapPartitions(chunk => {
       runapriori(chunk, thresold)
     }).map(x=>(x,1))
@@ -158,7 +131,6 @@ object SaiTeja_Chava_SON {
     var last = secondmap.reduceByKey(_+_)
     var last1 = last.filter(_._2 >= support)
     var last2 = last1.map(_._1).map(x => (x.size,x)).collect()
-    //println("After second reduce by key")
     val max = last2.maxBy(_._1)._1
 
     var tosort = sort(last2.filter(_._1 == 1).map(_._2))
@@ -179,10 +151,8 @@ object SaiTeja_Chava_SON {
       var x = sort(last2.filter(_._1 == i) map(_._2))
       var temp = x.map(k => k.toList.sorted)
       var temp1 = sort(temp)
-      //println(sort(temp))
       for (k<- temp1)
       {   tdp = tdp + "("
-        //var s = k.toList.sorted
         var s = k
         for (j<- s){
           if (j!=s.last){

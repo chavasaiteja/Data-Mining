@@ -26,29 +26,8 @@ object Task1 {
 
     df = df.select("Country", "Salary", "SalaryType")
 
-    /*
-    println()
-    println("***** Schema  ******")
-    print(df.printSchema())
-    printf("Count = %d", df.count())
-    println()
-    */
-
     val df2 = df.filter($"Salary" !== "NA").filter($"Salary" !== "0")
     val df3 = df2.select("Country")
-
-    /*
-    println()
-    println()
-    printf("Count = %d", df2.count())
-
-    println()
-    println()
-    print(df3.printSchema())
-    */
-
-    //val x = df3.take(5)
-    //print(x(0))
 
     val df4 = df3.rdd
     val df5 = df4.map(x => (x.getString(0), 1))
@@ -67,10 +46,8 @@ object Task1 {
     csvWriter.writeNext(Array("Total",df2.count().toString))
 
     for(line <- df8){
-      //println(line._1)
       csvWriter.writeNext(Array(line._1.toString,line._2.toString))
     }
-    //df7.toDF().repartition(1).write.format("csv").save(args(1))
     csvWriter.close()
 
   }

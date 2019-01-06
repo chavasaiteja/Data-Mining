@@ -34,45 +34,17 @@ object Task3 {
     val replace = udf((data : String)=>data.replaceAll(",",""))
     var df2 = df.withColumn("Salary",replace($"Salary"))
 
-    /*
-    println()
-    println("***** Schema  ******")
-    print(df.printSchema())
-    printf("Count = %d",df.count())
-    println()
-    */
-
     df2 = df2.filter($"Salary"!=="NA").filter($"Salary"!=="0")
 
     val distinctvaluesdf = df.select("SalaryType").distinct()
 
-    //println()
-
-    //println("Distinct values of the SalaryType Column are as follows")
-    //distinctvaluesdf.collect.foreach(println)
-
-    //println()
-
     val aftermonthDF = df2.withColumn("SalaryNew", when($"SalaryType" === "Monthly", $"Salary"*12).otherwise($"Salary"))
     var afterweekDF = aftermonthDF.withColumn("SalaryFinal",when($"SalaryType" === "Weekly",$"Salary"*52).otherwise($"SalaryNew"))
     val b = afterweekDF.take(20)
-    //println()
-
-    //afterweekDF.limit(70).show(70,false)
-    //afterweekDF.repartition(1).write.format("csv").save("/Users/sai/Downloads/spark-2.3.1-bin-hadoop2.7/bin/check.csv")
+    
     afterweekDF = afterweekDF.select("Country","SalaryFinal")
-    //afterweekDF.limit(70).show(70,false)
-    /*
-    println()
-    println("***** Schema  ******")
-    print(afterweekDF.printSchema())
-    printf("Count = %d",df.count())
-    println()
-    */
-
+    
     var count = afterweekDF.groupBy("Country").count().orderBy($"Country".asc)
-
-    //count.repartition(1).write.format("csv").save("/Users/sai/Downloads/spark-2.3.1-bin-hadoop2.7/bin/count.csv")
 
     val avg = afterweekDF.groupBy("Country").agg(mean("SalaryFinal")).orderBy($"Country".asc)
 
@@ -86,10 +58,7 @@ object Task3 {
     val csvWriter = new CSVWriter(writer)
 
     for (line <- ma1){
-      //println()
-      //print(line)
       var seq = line.getSeq[Double](1).toArray
-      //var seq = asd.toSeq
       var max_country = (seq.max).toInt
       var min_country = (seq.min).toInt
       var sum_country = seq.sum
@@ -98,8 +67,6 @@ object Task3 {
       csvWriter.writeNext(Array(line(0).toString(), len_country.toString, min_country.toString, max_country.toString, avg_country.toString))
     }
     csvWriter.close()
-
-
 
     var ma = afterweekDF.groupBy($"Country").agg(max($"SalaryFinal")).orderBy($"Country".asc)
 

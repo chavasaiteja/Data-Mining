@@ -39,8 +39,6 @@ object Task1 {
     println()
     println("No of documents are : "+no_of_documents)
     println("Unique words count is : "+no_of_unique_words)
-    //println("Unique words are : "+unique_words)
-    //println("Unique words with index is : "+unique_words_with_index)
 
     //################## TF - IDF ########################
 
@@ -88,7 +86,6 @@ object Task1 {
 
     //#################### Word count ##########################
 
-    //var word_count = HashMap.empty[String, Int]
     var word_count = HashMap.empty[String, Double]
 
     input.collect().foreach{line =>
@@ -118,8 +115,6 @@ object Task1 {
       println(sorted_word_count)
     }
 
-
-
     else if(feature == "T") {
 
     sorted_word_count = ListMap(tf_idfs.toSeq.sortWith(_._2 > _._2): _*)
@@ -134,13 +129,10 @@ object Task1 {
 
     val r = new scala.util.Random(20181031)
 
-    //var centroids = new Array[Int](no_of_clusters)
     var centroids = new Array[Double](no_of_clusters)
     var centroid_words = new Array[String](no_of_clusters)
 
-    //val centroid_word_centroid = new HashMap[String, Int]()
     val centroid_word_centroid = new HashMap[String, Double]()
-    //var centroid_word_centroid1 = new HashMap[Int, Int]()
     var centroid_word_centroid1 = new HashMap[Double, Double]()
 
     for (j <- 1 until no_of_clusters + 1){
@@ -225,13 +217,9 @@ object Task1 {
       }
       println()
 
-
-
-
       println()
 
       var cluster_nums =  Set[Int]()
-      //centroid_word_centroid1 = new HashMap[Int, Int]()
       centroid_word_centroid1 = new HashMap[Double, Double]()
       cluster_avg.collect().foreach {case (cluster_num, cluster_count) =>
         centroids(cluster_num.toInt) = cluster_count
@@ -260,7 +248,6 @@ object Task1 {
       iteration_num+=1
     }
 
-    //var final_assignments = new HashMap[String, Int]()
     var final_assignments = new HashMap[String, Double]()
 
 
@@ -294,29 +281,11 @@ object Task1 {
       }
     }
 
-    /*
-    var cluster1 = new HashMap[String, Int]()
-    var cluster2 = new HashMap[String, Int]()
-    var cluster3 = new HashMap[String, Int]()
-    var cluster4 = new HashMap[String, Int]()
-    var cluster5 = new HashMap[String, Int]()
-    */
-
-
     var cluster1 = new HashMap[String, Double]()
     var cluster2 = new HashMap[String, Double]()
     var cluster3 = new HashMap[String, Double]()
     var cluster4 = new HashMap[String, Double]()
     var cluster5 = new HashMap[String, Double]()
-
-
-    /*
-    var cluster1_error = 0
-    var cluster2_error = 0
-    var cluster3_error = 0
-    var cluster4_error = 0
-    var cluster5_error = 0
-    */
 
     var cluster1_error = 0.0
     var cluster2_error = 0.0
@@ -444,7 +413,6 @@ object Task1 {
       var cluster_error = 0.0
       bw.write("{ \n")
       bw.write("\t \"algorithm\": \"K-Means\", \n")
-      //var WSSE = cluster1_error + cluster2_error + cluster3_error + cluster4_error + cluster5_error
       bw.write("\t \"WSSE\": " + WSSE + ", \n")
       bw.write("\t \"clusters\": [ { \n")
       for (i <- 1 to no_of_clusters) {
@@ -503,7 +471,6 @@ object Task1 {
       var cluster_error = 0.0
       bw.write("{ \n")
       bw.write("\t \"algorithm\": \"K-Means\", \n")
-      //var WSSE = cluster1_error + cluster2_error + cluster3_error + cluster4_error + cluster5_error
       bw.write("\t \"WSSE\": " + WSSE + ", \n")
       bw.write("\t \"clusters\": [ { \n")
       for (i <- 1 to no_of_clusters) {
