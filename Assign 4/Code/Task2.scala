@@ -59,7 +59,6 @@ object Task2 {
     val numClusters = no_of_clusters
     val numIterations = no_of_iterations
 
-
     if(algorithm=="K") {
       val clusters = KMeans.train(tfidfIgnore, numClusters, numIterations, initializationMode = "k-means||", 42)
       val predictions = clusters.predict(tfidfIgnore).zipWithIndex()
@@ -115,7 +114,6 @@ object Task2 {
       println("Prediction count is : " + predictions.count())
       val cluster_centroids = clusters.clusterCenters
 
-
       // Evaluate clustering by computing Within Set Sum of Squared Errors
       println("Kmeans")
 
@@ -157,7 +155,6 @@ object Task2 {
         cluster_vec_rdd(cluster_vector._1) = sc.parallelize((cluster_vector._2))
       }
 
-
       var cluster_errors = HashMap.empty[Int,Double]
 
       for(l <- cluster_vectors){
@@ -176,7 +173,6 @@ object Task2 {
 
       println("Cluster errors")
       println(cluster_errors)
-
 
       val file = new File("SaiTeja_Chava_KMeans_small_K_8_20.json")
       val bw = new BufferedWriter(new FileWriter(file))
@@ -209,15 +205,12 @@ object Task2 {
       }
       bw.write("} \n")
       bw.close()
-
-
     }
 
     else if(algorithm=="B") {
 
       val bkm = new BisectingKMeans().setK(numClusters).setSeed(random_seed).setMaxIterations(numIterations)
       val model = bkm.run(tfidfIgnore)
-
 
       println()
       println("Bisecting K means")
@@ -308,7 +301,6 @@ object Task2 {
       for(cluster_vector <- cluster_vectors){
         cluster_vec_rdd(cluster_vector._1) = sc.parallelize((cluster_vector._2))
       }
-
 
       var cluster_errors = HashMap.empty[Int,Double]
 

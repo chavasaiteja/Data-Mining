@@ -9,7 +9,6 @@ import org.apache.spark.sql.functions.round
 
 import scala.math.BigDecimal
 
-
 object Task3 {
   def main(args: Array[String]) {
 
@@ -47,7 +46,6 @@ object Task3 {
     var count = afterweekDF.groupBy("Country").count().orderBy($"Country".asc)
 
     val avg = afterweekDF.groupBy("Country").agg(mean("SalaryFinal")).orderBy($"Country".asc)
-
     var avg1 = avg.withColumn("Avg", round($"avg(SalaryFinal)", 2))
     var avg2 = avg1.select("Country","Avg")
 

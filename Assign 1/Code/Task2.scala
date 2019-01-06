@@ -9,7 +9,6 @@ import org.apache.spark.sql._
 
 object Task2 {
   def main(args: Array[String]) {
-
     // Turn off logging
     Logger.getLogger("org").setLevel(Level.OFF)
     Logger.getLogger("akka").setLevel(Level.OFF)
@@ -31,7 +30,6 @@ object Task2 {
 
     df = df.select("Country", "Salary", "SalaryType")
 
-
     val df2 = df.filter($"Salary" !== "NA").filter($"Salary" !== "0")
     val df3 = df2.select("Country")
 
@@ -41,7 +39,6 @@ object Task2 {
 
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args(1))))
     val csvWriter = new CSVWriter(writer)
-
 
     var par1 = df5.toDF().rdd.mapPartitionsWithIndex{case (i,rows) => Iterator((i,rows.size))}.toDF("partition_number","number_of_records")
   
@@ -60,7 +57,6 @@ object Task2 {
 
     var par2 = df11.mapPartitionsWithIndex{case (i,rows) => Iterator((i,rows.size))}.toDF("partition_number","number_of_records")
     var start_with_partition = System.currentTimeMillis()
-
 
     var df13 = df12.reduceByKey((x, y) => x + y)
     val df14 = df13.sortByKey()

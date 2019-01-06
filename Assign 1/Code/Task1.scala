@@ -39,7 +39,6 @@ object Task1 {
 
     val df8 = df7.collect()
 
-
     val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args(1))))
     val csvWriter = new CSVWriter(writer)
 

@@ -56,8 +56,6 @@ object SaiTeja_Chava_SON {
         }
       }
 
-
-
       if(candidate_set.size > candidate_set_size){
         freq_items = result
         result = Set.empty[String]
@@ -85,7 +83,6 @@ object SaiTeja_Chava_SON {
     val conf = new SparkConf().setAppName("Sai").setMaster("local[*]")
     val sc = new SparkContext(conf)
 
-
     val input = sc.textFile(args(0))
     val support = args(1).toInt //.toDouble
     var tdp = ""
@@ -107,10 +104,9 @@ object SaiTeja_Chava_SON {
     }).map(x=>(x,1))
 
     var first1 = first.reduceByKey((v1,v2)=>1).map(_._1).collect()
-    //
+    
     val broadcasted = sc.broadcast(first1)
-    //println("After first reduce by key")
-
+    
     var secondmap = baskets.mapPartitions(chunk => {
       var chunklist = chunk.toList
       var count10 = 0

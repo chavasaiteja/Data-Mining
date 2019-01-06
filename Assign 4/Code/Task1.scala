@@ -73,7 +73,6 @@ object Task1 {
     val tfs_sum_join_length = tfs_sum.join(tfs_length)
     val tfs_avg = tfs_sum_join_length.map{case(cluster, (sum, len)) => (cluster, sum / len)}
 
-
     val idfs = HashMap.empty[String, Double]
     tfs_length.collect().foreach{ x =>
       idfs(x._1) = scala.math.log(no_of_documents/x._2)
@@ -250,7 +249,6 @@ object Task1 {
 
     var final_assignments = new HashMap[String, Double]()
 
-
     for ((i, j) <- unique_words_with_index){
       var temp1 = sorted_word_count(i)
       var centroid_num = 0
@@ -293,7 +291,6 @@ object Task1 {
     var cluster4_error = 0.0
     var cluster5_error = 0.0
 
-
     for ((i, j) <- unique_words_with_index){
       if(final_assignments(i)==0){
         cluster1(i) = sorted_word_count(i)
@@ -325,7 +322,6 @@ object Task1 {
     cluster4_error = math.sqrt(cluster4_error)
     cluster5_error = math.sqrt(cluster5_error)
 
-
     println()
     println("Size of cluster1 is : "+cluster1.size)
     println("Size of cluster2 is : "+cluster2.size)
@@ -344,7 +340,6 @@ object Task1 {
     var cluster3_list = cluster3_map.toList
     var cluster4_list = cluster4_map.toList
     var cluster5_list = cluster5_map.toList
-
 
     var words_in_cluster = new HashMap[Int, List[String]]()
     for(i <- 1 to no_of_clusters+1){
@@ -387,8 +382,6 @@ object Task1 {
         }
         words_in_cluster(i) = temp.toList
       }
-
-
     }
 
     println()
@@ -406,7 +399,6 @@ object Task1 {
     println("Cluster 5 error is : "+cluster5_error)
 
     if(feature=="W") {
-
       val file = new File("SaiTeja_Chava_KMeans_small_W_5_20.json")
       val bw = new BufferedWriter(new FileWriter(file))
       var cluster_size = 0
@@ -464,7 +456,6 @@ object Task1 {
     }
 
     else if(feature=="T"){
-
       val file = new File("SaiTeja_Chava_KMeans_small_T_5_20.json")
       val bw = new BufferedWriter(new FileWriter(file))
       var cluster_size = 0
@@ -520,8 +511,6 @@ object Task1 {
       bw.close()
 
     }
-
-
   }
 }
 

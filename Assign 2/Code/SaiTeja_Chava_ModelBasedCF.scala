@@ -12,7 +12,6 @@ import scala.collection.mutable.Map
 
 object SaiTeja_Chava_ModelBasedCF {
   def main(args: Array[String]) {
-
     // Turn off logging
     Logger.getLogger("org").setLevel(Level.OFF)
     Logger.getLogger("akka").setLevel(Level.OFF)
@@ -20,15 +19,16 @@ object SaiTeja_Chava_ModelBasedCF {
     val conf = new SparkConf().setAppName("Sai").setMaster("local")
     val sc = new SparkContext(conf)
 
-
     val  trainRDD = sc.textFile(args(0))
     val  testRDD = sc.textFile(args(1))
     var user_map = Map[String,Int]()
     var item_map = Map[String,Int]()
     var reverse_user_map = Map[Int,String]()
     var reverse_item_map = Map[Int,String]()
+    
     var index1 = 0
     var index2 = 0
+
     testRDD.collect().foreach{ line =>
       var fgh = line.split(",")(0)
       var lkj = line.split(",")(1)
@@ -87,13 +87,10 @@ object SaiTeja_Chava_ModelBasedCF {
     val model = ALS.train(ratings_data, r, i, 0.3)
 
     val train_data = trainRDD1.map{case ((user_id, business_id), star) => (user_map(user_id),item_map(business_id))}
-
     val train_predictions = model.predict(train_data).map { case Rating(user_id, business_id, star) => (user_id, business_id, star)}
-
     val test_data =  testRDD1.map{ case ((user_id, business_id), 1) => (user_map(user_id),item_map(business_id))}
 
     val pred = model.predict(test_data).map { case Rating(user_id, business_id, star) => (user_id, business_id, star)}
-
     val pred1 = pred.map { case (user_id, business_id, star) =>((user_id.toInt, business_id.toInt), star.toDouble)}
 
     val business_length =  trainRDD5.map{case((user_id, business_id),star) => (business_id, star)}.groupByKey().map(elem => (elem._1, elem._2.size))
@@ -117,13 +114,11 @@ object SaiTeja_Chava_ModelBasedCF {
 
     val mapright2 = restrestrate.collect().toMap
     val restrestrest = restrest.filter(elem => !mapright2.keySet.contains(elem._1))
-
     val restrestrestrate = restrestrest.map{case((user_id, business_id), star) => ((user_id,business_id),3.3)}
 
     val predicttotal = pred1.union(restrate).union(restrestrate)
-
     val predicttotal1 = predicttotal.union(restrestrestrate)
-
+    
     val preductNomal = predicttotal1.map{case((user, product), pred) =>
       if (pred <= 0) ((user, product), 3.0)
       else if (pred >= 5) ((user, product), 5.0)
@@ -137,7 +132,6 @@ object SaiTeja_Chava_ModelBasedCF {
     val count2 = ratesAndPreds.map{case ((user, product),(r1, r2)) =>((user, product), Math.abs(r1 - r2))}.filter(elem => elem._2 >= 2 && elem._2 < 3).count()
     val count3 = ratesAndPreds.map{case ((user, product),(r1, r2)) =>((user, product), Math.abs(r1 - r2))}.filter(elem => elem._2 >= 3 && elem._2 < 4).count()
     val count4 = ratesAndPreds.map{case ((user, product),(r1, r2)) =>((user, product), Math.abs(r1 - r2))}.filter(elem => elem._2 >= 4).count()
-
 
     val preductNomal1 = preductNomal.map{case((user, business), pred) => ((reverse_user_map(user),reverse_item_map(business)),pred)}
     

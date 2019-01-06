@@ -5,7 +5,6 @@ import org.apache.spark.SparkConf
 import scala.collection.mutable.Map
 object SaiTeja_Chava_UserBasedCF {
   def main(args: Array[String]) {
-
     // Turn off logging
     Logger.getLogger("org").setLevel(Level.OFF)
       Logger.getLogger("akka").setLevel(Level.OFF)
@@ -14,13 +13,10 @@ object SaiTeja_Chava_UserBasedCF {
     //.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     val sc = new SparkContext(conf)
 
-
     val  trainRDD = sc.textFile(args(0))
     val  testRDD = sc.textFile(args(1))
 
-
     val start_time = System.nanoTime()
-
     val output = new PrintWriter(new File("SaiTeja_Chava_UserBasedCF.txt"))
 
     // Load our input data.
@@ -29,14 +25,12 @@ object SaiTeja_Chava_UserBasedCF {
 
     //val testRDD  = sc.textFile("/Users/sai/Documents/Data Mining INF 553/Assignments/hw2/Data/test_review.csv")
     val test_header  = testRDD.first()
-    //val testRDD10 =
     var user_map = Map[String,Int]()
     var item_map = Map[String,Int]()
     var reverse_user_map = Map[Int,String]()
     var reverse_item_map = Map[Int,String]()
     var index1 = 0
     var index2 = 0
-
 
     testRDD.collect().foreach{ line =>
       var fgh = line.split(",")(0)
@@ -103,7 +97,6 @@ object SaiTeja_Chava_UserBasedCF {
     val jj = j.reduceByKey(_ + _)
     val ii = i.reduceByKey(_ + _)
 
-
     val matrix_group1 = grid.map{case((useri, userj),business,(ratei, ratej)) => ((useri, userj), (ratei, ratej))}
     val matrix_group = matrix_group1.groupByKey()
 
@@ -169,19 +162,16 @@ object SaiTeja_Chava_UserBasedCF {
     val maprightpart = predict.collect().toMap
 
     val remaining = test_rdd.filter(elem => !maprightpart.keySet.contains(elem._1))
-
     val rating_for_remaining = remaining.map{case((user, business), num) => (user, (business))}.join(user_avg).map{case(user,(business, avg)) => ((user,business), avg)}
 
     val maprightpart1 = rating_for_remaining.collectAsMap()
 
     val remaining_remaining = remaining.filter(elem => !maprightpart1.keySet.contains(elem._1))
-
     val rating_for_remaining_reamining = remaining_remaining.map{case((user, business), num) => (business,(user))}.join(item_avg).map{case(business,(user, avg)) => ((user,business),avg)}
 
     val maprightpart2 = rating_for_remaining_reamining.collectAsMap()
 
     val remaining_remaining_remaining = remaining_remaining.filter(elem => !maprightpart2.keySet.contains(elem._1))
-
     val rating_for_reamining_remaining_remaining = remaining_remaining_remaining.map{case((user, business), num) => ((user,business),3.0)}
 
     val predicttotal = predict.union(rating_for_remaining).union(rating_for_remaining_reamining).union(rating_for_reamining_remaining_remaining)
@@ -199,7 +189,6 @@ object SaiTeja_Chava_UserBasedCF {
     val n2 = xyz.map{case((user, product),(t, predic)) => ((user, product), Math.abs(t - predic))}.filter(x => x._2 >= 2 && x._2 < 3).count()
     val n3 = xyz.map{case((user, product),(t, predic)) => ((user, product), Math.abs(t - predic))}.filter(x => x._2 >= 3 && x._2 < 4).count()
     val n4 = xyz.map{case((user, product),(t, predic)) => ((user, product), Math.abs(t - predic))}.filter(x => x._2 >= 4).count()
-
 
     val RMSE = xyz.map{case((user, product),(t, predic)) =>
       val err = t - predic
