@@ -1,4 +1,4 @@
-# Data-Mining-Assignments
+## Data-Mining-Assignments
 
 #### Data:
 Yelp Dataset Challenge 2018 was used
