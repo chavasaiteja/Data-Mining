@@ -9,7 +9,6 @@ import org.apache.spark.mllib.recommendation.ALS
 
 import scala.collection.mutable.Map
 
-
 object SaiTeja_Chava_ModelBasedCF {
   def main(args: Array[String]) {
     // Turn off logging

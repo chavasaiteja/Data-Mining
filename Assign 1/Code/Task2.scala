@@ -5,8 +5,6 @@ import org.apache.log4j.Logger
 import org.apache.log4j.Level
 import org.apache.spark.sql._
 
-
-
 object Task2 {
   def main(args: Array[String]) {
     // Turn off logging

@@ -3,11 +3,12 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
 import scala.collection.mutable.Map
+
 object SaiTeja_Chava_UserBasedCF {
   def main(args: Array[String]) {
     // Turn off logging
     Logger.getLogger("org").setLevel(Level.OFF)
-      Logger.getLogger("akka").setLevel(Level.OFF)
+    Logger.getLogger("akka").setLevel(Level.OFF)
     val conf = new SparkConf().setAppName("Sai").setMaster("local[*]").set("spark.shuffle.spill","false").set("spark.rdd.compress","true")
       .set("spark.storage.memoryFraction", "1")
     //.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
