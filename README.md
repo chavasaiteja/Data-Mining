@@ -1,6 +1,6 @@
 ## Data-Mining-Assignments
 
-#### Data:
+#### Dataset:
 Yelp Dataset Challenge 2018 was used
 
 * Assignment 1 :- Hadoop Map Reduce
